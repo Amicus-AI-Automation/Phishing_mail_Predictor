@@ -1,1 +1,1 @@
-# Phishing_mail_Predictor
+# Phishing_Email_Predictor
