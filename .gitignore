@@ -1,0 +1,22 @@
+# Models
+*.pkl
+*.h5
+*.pt
+*.bin
+models/
+.pickle
+# Data
+data/
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+credentials.json
+token.pickle
