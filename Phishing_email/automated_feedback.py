@@ -67,7 +67,7 @@ test_df["model_prediction"] = (probs >= THRESHOLD).astype(int)
 test_df["phishing_probability"] = probs
 
 # ---------------- Identify incorrect predictions ----------------
-# ---------------- Identify incorrect predictions ----------------
+
 feedback_df = test_df[
     test_df["model_prediction"] != test_df["label"]
 ].copy()

@@ -61,18 +61,5 @@ def main():
     process_new_emails(service)
     print("Backfill completed.")
 
-    # while True:
-    #     try:
-    #         process_new_emails(service)
-    #         time.sleep(60)  # poll every 60 seconds
-
-    #     except KeyboardInterrupt:
-    #         print("\n Polling stopped by user.")
-    #         break
-
-    #     except Exception as e:
-    #         print(" Error during polling:", e)
-    #         time.sleep(60)
-
 if __name__ == "__main__":
     main()

@@ -83,8 +83,8 @@ if "prediction" in st.session_state:
             "timestamp": datetime.now().isoformat()
         }
 
-        feedback_file = os.path.abspath(os.path.join(BASE_DIR, "..", "data", "feedback_data.csv"))
-        os.makedirs("data", exist_ok=True)
+        feedback_file = os.path.abspath(os.path.join(BASE_DIR, "data", "feedback_data.csv"))
+        os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
         columns = [
              "email_text",
              "model_prediction",

@@ -29,14 +29,6 @@ def gmail_authenticate():
     return service
 
 
-# def fetch_message_ids(service, max_results=20):
-#     results = service.users().messages().list(
-#         userId="me",
-#         q="in:inbox",
-#         maxResults=max_results
-#     ).execute()
-
-#     return results.get("messages", [])
 def fetch_all_message_ids(service, max_pages=10):
     all_messages = []
     page_token = None
