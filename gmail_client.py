@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup   # NEW
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 
+ # Authenticate and return the Gmail API service
 def gmail_authenticate():
     creds = None
 
@@ -28,15 +29,6 @@ def gmail_authenticate():
     service = build("gmail", "v1", credentials=creds)
     return service
 
-
-# def fetch_message_ids(service, max_results=20):
-#     results = service.users().messages().list(
-#         userId="me",
-#         q="in:inbox",
-#         maxResults=max_results
-#     ).execute()
-
-#     return results.get("messages", [])
 def fetch_all_message_ids(service, max_pages=10):
     all_messages = []
     page_token = None
@@ -65,12 +57,13 @@ def fetch_all_message_ids(service, max_pages=10):
     return all_messages
 
 
-# NEW helper function
+ # Convert HTML content to plain text
 def html_to_text(html):
     soup = BeautifulSoup(html, "html.parser")
     return soup.get_text(separator=" ")
 
 
+ # Read an email by message ID and extract subject and body
 def read_email(service, msg_id):
     msg = service.users().messages().get(
         userId="me",

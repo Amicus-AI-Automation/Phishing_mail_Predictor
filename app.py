@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import time
 
+ # Save the prediction result to a CSV file
 def save_prediction(message_id, subject, body, pred, prob):
     row = {
         "message_id": message_id,
@@ -24,6 +25,7 @@ def save_prediction(message_id, subject, body, pred, prob):
         index=False
     )
 
+ # Check if a message ID has already been processed
 def is_already_processed(message_id, file_path):
     if not os.path.exists(file_path):
         return False
@@ -32,10 +34,12 @@ def is_already_processed(message_id, file_path):
     return message_id in df["message_id"].values
 
 
+ # Test and print the Gmail profile information
 def test_gmail_profile(service):
     profile = service.users().getProfile(userId="me").execute()
     print("Gmail profile OK:", profile["emailAddress"])
 
+ # Process new emails, predict phishing, and save results
 def process_new_emails(service):
     messages = fetch_all_message_ids(service, max_pages=10)
 
@@ -53,6 +57,7 @@ def process_new_emails(service):
         
 
 
+ # Main entry point for the application
 def main():
     service = gmail_authenticate()
     test_gmail_profile(service)
@@ -60,19 +65,6 @@ def main():
     print("Starting ONE-TIME backfill run...")
     process_new_emails(service)
     print("Backfill completed.")
-
-    # while True:
-    #     try:
-    #         process_new_emails(service)
-    #         time.sleep(60)  # poll every 60 seconds
-
-    #     except KeyboardInterrupt:
-    #         print("\n Polling stopped by user.")
-    #         break
-
-    #     except Exception as e:
-    #         print(" Error during polling:", e)
-    #         time.sleep(60)
 
 if __name__ == "__main__":
     main()
