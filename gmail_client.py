@@ -5,8 +5,9 @@ import pickle
 import os
 import base64
 from bs4 import BeautifulSoup   # NEW
+import logging
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
 
  # Authenticate and return the Gmail API service
@@ -27,7 +28,16 @@ def gmail_authenticate():
             pickle.dump(creds, token)
 
     service = build("gmail", "v1", credentials=creds)
+    results = service.users().messages().list(userId='me').execute()
+    print(results)
     return service
+
+def get_label_id(service, label_name):
+    labels = service.users().labels().list(userId="me").execute()
+    for label in labels["labels"]:
+        if label["name"] == label_name:
+            return label["id"]
+    return None
 
 def fetch_all_message_ids(service, max_pages=10):
     all_messages = []
@@ -102,3 +112,33 @@ def read_email(service, msg_id):
 
     return msg_id, subject, body
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger(__name__)
+
+
+def move_to_suspected(service, message_id, label_id):
+    try:
+        response = service.users().messages().modify(
+            userId="me",
+            id=message_id,
+            body={
+                "addLabelIds": [label_id],
+                "removeLabelIds": ["INBOX"]  # optional
+            }
+        ).execute()
+
+        logger.info(
+            f"[SUCCESS] Email moved to 'suspected_phish' | message_id={message_id} | label_id={label_id}"
+        )
+
+        return response
+
+    except Exception as e:
+        logger.error(
+            f"[ERROR] Failed to move email | message_id={message_id} | error={str(e)}"
+        )
+        return None
